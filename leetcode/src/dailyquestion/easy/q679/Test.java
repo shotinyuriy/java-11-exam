@@ -26,8 +26,17 @@ public class Test extends AbstractTest {
 
     public static void main(String[] args) {
         TestData[] testDatas = new TestData[]{
-                new TestData(new int[]{4, 1, 8, 7}, true),
+                new TestData(new int[]{1, 1, 1, 1}, false),
+                new TestData(new int[]{2, 2, 2, 2}, false),
                 new TestData(new int[]{3, 3, 3, 3}, true),
+                new TestData(new int[]{4, 4, 4, 4}, true),
+                new TestData(new int[]{5, 5, 5, 5}, true),
+                new TestData(new int[]{6, 6, 6, 6}, true),
+                new TestData(new int[]{7, 7, 7, 7}, false),
+                new TestData(new int[]{8, 8, 8, 8}, false),
+                new TestData(new int[]{9, 9, 9, 9}, false),
+
+                new TestData(new int[]{4, 1, 8, 7}, true),
                 new TestData(new int[]{3, 3, 7, 7}, true), // ((3 / 7) + 3) * 7 = 24/7 * 7
                 new TestData(new int[]{1, 5, 9, 1}, false),
                 new TestData(new int[]{8, 1, 6, 6}, true), // 8 * (6 + 1) = 56 / 6
@@ -39,7 +48,7 @@ public class Test extends AbstractTest {
         Solution solution = new Solution2();
         for (TestData testData : testDatas) {
             boolean result = solution.judgePoint24(testData.getCards());
-            System.out.printf("cards=%s expected=%s actual=%s\n",
+            System.out.printf("cards=%s expected=%s actual=%s\n\n",
                     Arrays.toString(testData.getCards()), testData.isExpectedValue(), result);
         }
     }
