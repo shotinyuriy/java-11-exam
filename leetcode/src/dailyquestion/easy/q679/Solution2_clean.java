@@ -9,7 +9,7 @@ import java.util.*;
 // a ? b ? (c ? d)
 // (a ? b) ? (c ? d)
 // a ? (b ? c) ? d
-public class Solution2 implements Solution {
+public class Solution2_clean implements Solution {
     private static final int scale = 20;
     private static final java.math.RoundingMode rMode = java.math.RoundingMode.HALF_UP;
 
@@ -112,7 +112,7 @@ public class Solution2 implements Solution {
 //                System.out.printf("%s=%s\n", oper, result.doubleValue());
 //            }
             if (Double.compare(oper.result().doubleValue(), x) == 0) {
-                System.out.printf("%s=%s\n", oper, result.doubleValue());
+//                System.out.printf("%s=%s\n", oper, result.doubleValue());
                 return true;
             }
         }
