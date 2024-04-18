@@ -46,13 +46,13 @@ public class Solution2 implements Solution {
             try {
                 switch (action) {
                     case '+':
-                        return left.result().add(right.result()).setScale(scale, rMode);
+                        return left.result().add(right.result());
                     case '-':
-                        return left.result().subtract(right.result()).setScale(scale, rMode);
+                        return left.result().subtract(right.result());
                     case '*':
-                        return left.result().multiply(right.result()).setScale(scale, rMode);
+                        return left.result().multiply(right.result());
                     case '/':
-                        return left.result().divide(right.result(), rMode).setScale(scale, rMode);
+                        return left.result().divide(right.result(), rMode);
                 }
                 return java.math.BigDecimal.valueOf(value).setScale(scale, rMode);
             } catch (ArithmeticException e) {
