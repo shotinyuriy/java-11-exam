@@ -1,5 +1,6 @@
 package dailyquestion.easy.q679;
 
+import java.math.BigDecimal;
 import java.util.*;
 
 // (a ? b) ? c ? d
@@ -46,6 +47,19 @@ public class Solution2 implements Solution {
             }
             return bdl;
         }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            BinOper oper = (BinOper) o;
+            return value == oper.value && action == oper.action && Objects.equals(next, oper.next);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(value, next, action);
+        }
     }
 
     @Override
@@ -66,6 +80,8 @@ public class Solution2 implements Solution {
             opers.addAll(allOperations(curCards, 3));
         }
         for (BinOper oper : opers) {
+            BigDecimal result = oper.result();
+            System.out.printf("result=%s\n", result);
             if (oper.result().equals(x)) return true;
         }
         return false;
