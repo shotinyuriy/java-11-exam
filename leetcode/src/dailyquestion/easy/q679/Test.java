@@ -34,7 +34,7 @@ public class Test extends AbstractTest {
 //                new TestData(new int[]{1, 9, 1, 2}, true),
 //                new TestData(new int[]{1, 2, 1, 2}, false),
         };
-        Solution solution = new Solution1();
+        Solution solution = new Solution2();
         for (TestData testData : testDatas) {
             boolean result = solution.judgePoint24(testData.getCards());
             System.out.printf("cards=%s expected=%s actual=%s\n",
