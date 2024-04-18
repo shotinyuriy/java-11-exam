@@ -77,8 +77,8 @@ public class Solution2 implements Solution {
 
         public String toString(boolean needP) {
             if (action != '_') {
-                boolean lNeedP = left.priority() < Math.max(right.priority(), this.priority());
-                boolean rNeedP = Math.max(left.priority(), this.priority()) > right.priority();
+                boolean lNeedP = left.priority() < Math.max(right.priority(), this.priority()) || this.action == '-' && left.action == '-' || this.action == '/' && left.action == '/';
+                boolean rNeedP = Math.max(left.priority(), this.priority()) > right.priority() || this.action == '-' && right.action == '-' || this.action == '/' && right.action == '/';
                 if (needP) {
                     return '(' + left.toString(lNeedP) + action + right.toString(rNeedP) + ')';
                 } else {
@@ -114,9 +114,9 @@ public class Solution2 implements Solution {
                 System.out.printf("%s=%s\n", oper, result.doubleValue());
                 return true;
             }
-//            if (Double.compare(result.doubleValue(), 23.0) > 0 && Double.compare(result.doubleValue(), 25.0) < 0) {
-//                System.out.printf("%s=%s\n", oper, result.doubleValue());
-//            }
+            if (Double.compare(result.doubleValue(), 23.0) > 0 && Double.compare(result.doubleValue(), 25.0) < 0) {
+                System.out.printf("%s=%s\n", oper, result.doubleValue());
+            }
         }
         return false;
     }
