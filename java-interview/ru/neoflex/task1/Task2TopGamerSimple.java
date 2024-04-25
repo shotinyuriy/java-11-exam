@@ -7,25 +7,21 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-import static java.lang.System.nanoTime;
-
-public class Task2TopGamer {
+public class Task2TopGamerSimple {
     static final Random rnd = new Random();
 
     static class GamerScore {
         long gamerId;
         double score;
-        LocalTime timestamp;
 
-        public GamerScore(int gamerId, double score, LocalTime localTime) {
+        public GamerScore(int gamerId, double score) {
             this.gamerId = gamerId;
             this.score = score;
-            this.timestamp = localTime;
         }
 
         @Override
         public String toString() {
-            return "GamerScore{" + "gamerId=" + gamerId + ", score=" + score + ", timestamp=" + timestamp + '}';
+            return "GamerScore{" + "gamerId=" + gamerId + ", score=" + score + '}';
         }
     }
 
@@ -36,14 +32,10 @@ public class Task2TopGamer {
     public static void main(String[] args) {
         for (int i = 1; i <= 10; i++) {
             final int gamerId = i % 5 + 1;
-            gamerScoreEmitter.scheduleAtFixedRate(
-                    () -> listenGamerScore(
-                            new GamerScore(gamerId, rnd.nextInt(1, 1000) / 10.0,
-                                    LocalTime.now().plusSeconds(-3 + rnd.nextInt(4)))),
+            gamerScoreEmitter.scheduleAtFixedRate(() -> listenGamerScore(new GamerScore(gamerId, rnd.nextInt(1, 1000) / 10.0)),
                     rnd.nextInt(1, 10), rnd.nextInt(1, 10), TimeUnit.MILLISECONDS);
         }
-        topGamerPrinter.scheduleAtFixedRate(
-                () -> printTop3Gamers(), 5, 5, TimeUnit.SECONDS);
+        topGamerPrinter.scheduleAtFixedRate(() -> printTop3Gamers(), 5, 5, TimeUnit.SECONDS);
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
@@ -56,7 +48,6 @@ public class Task2TopGamer {
     static Map<Long, GamerScore> currentGamerScore = new HashMap<>();
 
     static void listenGamerScore(GamerScore gamerScore) {
-//        System.out.println(gamerScore);
         currentGamerScore.put(gamerScore.gamerId, gamerScore);
     }
 
@@ -64,6 +55,6 @@ public class Task2TopGamer {
         System.out.println("=== " + LocalTime.now().truncatedTo(ChronoUnit.SECONDS) + " Top 3 Gamers ===");
         currentGamerScore.forEach((gamerId, gamerScore) ->
                 System.out.println(
-                        "gamerId=" + gamerId + " scored " + gamerScore.score + " at " + gamerScore.timestamp.truncatedTo(ChronoUnit.SECONDS)));
+                        "gamerId=" + gamerId + " scored " + gamerScore.score));
     }
 }
