@@ -17,6 +17,11 @@ public class Task1OrdersTopProducts {
             this.productName = productName;
             this.count = count;
         }
+
+        @Override
+        public String toString() {
+            return "CommerceItem{" + "productName='" + productName + '\'' + ", count=" + count + '}';
+        }
     }
 
     static class CommerceOrder {
@@ -27,11 +32,17 @@ public class Task1OrdersTopProducts {
             this.orderDate = orderDate;
             this.commerceItems = commerceItems;
         }
+
+        @Override
+        public String toString() {
+            return "CommerceOrder{" + "orderDate=" + orderDate + ", commerceItems=" + commerceItems + '}';
+        }
     }
 
     public static void printTop2ProductsOfMonth(List<CommerceOrder> commerceOrders, Month month) {
         System.out.println("=== Top 2 Product of " + month.getDisplayName(TextStyle.FULL, Locale.ENGLISH) + " ===");
         // TODO: print ${productName}=${sum(count)}
+        System.out.println(commerceOrders);
     }
 
     public static void main(String[] args) {
