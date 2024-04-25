@@ -5,7 +5,7 @@ import java.time.Month;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Task1Orders {
+public class Task1OrdersTopCustomers {
     static class CommerceOrder {
         public long customerId;
         public LocalDate orderDate;
