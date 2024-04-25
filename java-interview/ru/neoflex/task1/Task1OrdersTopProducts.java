@@ -6,6 +6,7 @@ import java.time.format.TextStyle;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.stream.Collectors;
 
 public class Task1OrdersTopProducts {
     static class CommerceItem {
@@ -22,17 +23,15 @@ public class Task1OrdersTopProducts {
         public LocalDate orderDate;
         public List<CommerceItem> commerceItems;
 
-        public CommerceOrder() {
-        }
-
         public CommerceOrder(LocalDate orderDate, List<CommerceItem> commerceItems) {
             this.orderDate = orderDate;
+            this.commerceItems = commerceItems;
         }
     }
 
     public static void printTop2ProductsOfMonth(List<CommerceOrder> commerceOrders, Month month) {
         System.out.println("=== Top 2 Product of " + month.getDisplayName(TextStyle.FULL, Locale.ENGLISH) + " ===");
-        // productName - count
+        // TODO: print ${productName}=${sum(count)}
     }
 
     public static void main(String[] args) {
@@ -40,8 +39,8 @@ public class Task1OrdersTopProducts {
         commerceOrders.add(new CommerceOrder(LocalDate.parse("2024-01-09"), List.of(
                 new CommerceItem("pears", 10), new CommerceItem("apples", 3)))
         );
-        commerceOrders.add(new CommerceOrder(LocalDate.parse("2024-04-12"), List.of(
-                new CommerceItem("apples", 3), new CommerceItem("babanas", 16)))
+        commerceOrders.add(new CommerceOrder(LocalDate.parse("2024-03-12"), List.of(
+                new CommerceItem("apples", 3), new CommerceItem("babanas", 1)))
         );
         commerceOrders.add(new CommerceOrder(LocalDate.parse("2024-03-14"), List.of(
                 new CommerceItem("babanas", 1)))
@@ -50,10 +49,10 @@ public class Task1OrdersTopProducts {
                 new CommerceItem("pears", 10), new CommerceItem("babanas", 5)))
         );
         commerceOrders.add(new CommerceOrder(LocalDate.parse("2024-03-09"), List.of(
-                new CommerceItem("pears", 1)))
+                new CommerceItem("apples", 1)))
         );
         commerceOrders.add(new CommerceOrder(LocalDate.parse("2024-03-15"), List.of(
-                new CommerceItem("pears", 3), new CommerceItem("babanas", 16)))
+                new CommerceItem("pears", 3), new CommerceItem("babanas", 7)))
         );
         System.out.println("commerceOrders count=" + commerceOrders.size());
         printTop2ProductsOfMonth(commerceOrders, Month.MARCH);
