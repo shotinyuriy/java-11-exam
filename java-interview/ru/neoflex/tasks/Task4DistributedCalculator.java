@@ -60,7 +60,7 @@ public class Task4DistributedCalculator {
         final List<CalcAction> actions = new ArrayList<>();
 
         public int generateSteps() {
-            // ( ( ( ( =x +x ) *x) /x) -x) = x | if x = 2: 2 -> 4 -> 8 -> 4 -> 2
+            // ( ( ( ( =x +x ) *x) /x) -x) = x | if x = 2 then 2 -> 4 -> 8 -> 4 -> 2
             final char[] operators = new char[]{'=', '+', '*', '/', '-'};
             final String[] valNames = {"A", "B", "C"};
             int step = 0;
