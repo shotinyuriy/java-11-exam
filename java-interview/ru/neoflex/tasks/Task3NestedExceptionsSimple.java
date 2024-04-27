@@ -10,23 +10,28 @@ public class Task3NestedExceptionsSimple {
     static final boolean DEBUG = true; // TODO: disable when done
 
     public static void main(String[] args) throws Exception {
-        for (int testIdx = 0; testIdx < 4; testIdx++) {
+        for (int testCase = 1; testCase <= 4; testCase++) {
             HeavyResource heavyResource = new HeavyResource(); // TODO: fix this ?
             try {
-                heavyResource.testCaseByIndex(testIdx);
+                heavyResource.testCaseForException(testCase);
             } catch (Exception e) {
                 Throwable rootCause = findRootCause(e); // TODO: fix this
-                System.err.println("=== testIdx:" + testIdx + " the root cause is [" + rootCause + "]");
+                System.err.println("=== testCase:" + testCase + " the root cause is [" + rootCause + "]");
                 if (DEBUG) {
                     System.err.println("DEBUG: full stack trace -> ");
                     e.printStackTrace();
                 }
                 System.err.println();
             }
+            heavyResource.close();
         }
         TimeUnit.SECONDS.sleep(1);
-        System.out.println("=== exit ===");
+        System.out.println("=== HAPPY END ===");
     }
+
+    static Throwable findRootCause(Throwable source) {
+        return source;
+    } // TODO: may be helpful to implement
 
     static class CustomRuntimeException extends RuntimeException {
         public CustomRuntimeException(String message, Throwable cause) {
@@ -47,10 +52,6 @@ public class Task3NestedExceptionsSimple {
         }
     }
 
-    static Throwable findRootCause(Throwable source) {
-        return source;
-    } // TODO: may be helpful to implement
-
     static class HeavyResource implements AutoCloseable {
         static final Map<Long, List<byte[]>> GLOBAL_BIG_DATA = new HashMap<>();
         final long id = System.nanoTime();
@@ -64,16 +65,15 @@ public class Task3NestedExceptionsSimple {
             GLOBAL_BIG_DATA.put(id, localBigData);
         }
 
-        void testCaseByIndex(int idx) throws Exception {
+        void testCaseForException(int testCase) throws Exception {
             try {
-                int id = idx % 4;
-                if (id == 0) {
+                if (testCase == 1) {
                     arithmetic();
-                } else if (id == 1) {
+                } else if (testCase == 2) {
                     fileMethod();
-                } else if (id == 2) {
+                } else if (testCase == 3) {
                     sneakyFileMethod();
-                } else if (id == 3) {
+                } else if (testCase == 4) {
                     sneakyCustomMethod();
                 }
             } catch (RuntimeException e) {
