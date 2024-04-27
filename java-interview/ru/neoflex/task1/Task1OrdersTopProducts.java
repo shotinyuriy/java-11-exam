@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.time.Month;
 import java.time.format.TextStyle;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 import java.util.stream.Collectors;
@@ -47,22 +48,22 @@ public class Task1OrdersTopProducts {
 
     public static void main(String[] args) {
         List<CommerceOrder> commerceOrders = new ArrayList<>();
-        commerceOrders.add(new CommerceOrder(LocalDate.parse("2024-01-09"), List.of(
+        commerceOrders.add(new CommerceOrder(LocalDate.parse("2024-01-09"), Arrays.asList(
                 new CommerceItem("pears", 10), new CommerceItem("apples", 3)))
         );
-        commerceOrders.add(new CommerceOrder(LocalDate.parse("2024-03-12"), List.of(
+        commerceOrders.add(new CommerceOrder(LocalDate.parse("2024-03-12"), Arrays.asList(
                 new CommerceItem("apples", 3), new CommerceItem("babanas", 1)))
         );
-        commerceOrders.add(new CommerceOrder(LocalDate.parse("2024-03-14"), List.of(
+        commerceOrders.add(new CommerceOrder(LocalDate.parse("2024-03-14"), Arrays.asList(
                 new CommerceItem("babanas", 1)))
         );
-        commerceOrders.add(new CommerceOrder(LocalDate.parse("2024-02-16"), List.of(
+        commerceOrders.add(new CommerceOrder(LocalDate.parse("2024-02-16"), Arrays.asList(
                 new CommerceItem("pears", 10), new CommerceItem("babanas", 5)))
         );
-        commerceOrders.add(new CommerceOrder(LocalDate.parse("2024-03-09"), List.of(
+        commerceOrders.add(new CommerceOrder(LocalDate.parse("2024-03-09"), Arrays.asList(
                 new CommerceItem("apples", 1)))
         );
-        commerceOrders.add(new CommerceOrder(LocalDate.parse("2024-03-15"), List.of(
+        commerceOrders.add(new CommerceOrder(LocalDate.parse("2024-03-15"), Arrays.asList(
                 new CommerceItem("pears", 3), new CommerceItem("babanas", 7)))
         );
         System.out.println("commerceOrders count=" + commerceOrders.size());

@@ -4,6 +4,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.charset.IllegalCharsetNameException;
 import java.nio.file.AccessDeniedException;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.Executors;
@@ -13,7 +14,7 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 public class Task3NestedExceptions {
-    static List<Supplier<Exception>> rootCauseSuppliers = List.of(
+    static List<Supplier<Exception>> rootCauseSuppliers = Arrays.asList(
             () -> new NullPointerException("root exception"),
             () -> new NumberFormatException("root exception"),
             () -> new IllegalCharsetNameException("root exception"),
@@ -23,7 +24,7 @@ public class Task3NestedExceptions {
             () -> null
     );
 
-    static List<Function<Exception, Exception>> exFunctions = List.of(
+    static List<Function<Exception, Exception>> exFunctions = Arrays.asList(
             (cause) -> new Exception("exception", cause),
             (cause) -> new RuntimeException("runtime exception", cause),
             (cause) -> new IllegalArgumentException("illegal argument", cause),

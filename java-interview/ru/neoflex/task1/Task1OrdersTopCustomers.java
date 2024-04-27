@@ -19,6 +19,7 @@ public class Task1OrdersTopCustomers {
             this.orderDate = orderDate;
             this.orderTotal = orderTotal;
         }
+
         @Override
         public String toString() {
             return "CommerceOrder{customerId=" + customerId + ", orderDate=" + orderDate +
@@ -30,9 +31,9 @@ public class Task1OrdersTopCustomers {
         final int customerCount = 7;
         List<CommerceOrder> commerceOrders = new ArrayList<>();
         for (int i = 0; i < 100; i++) {
-            var order = new CommerceOrder();
+            CommerceOrder order = new CommerceOrder();
             order.customerId = i % customerCount + 1;
-            var month = Month.of((i / 9) % 12 + 1);
+            Month month = Month.of((i / 9) % 12 + 1);
             order.orderDate = LocalDate.of(2020 + i / 99, month, i % month.minLength() + 1);
             order.orderTotal = 1.0 + i % 10 + i % 10 / 10.0;
             commerceOrders.add(order);

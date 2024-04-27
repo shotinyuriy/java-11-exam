@@ -38,9 +38,9 @@ public class Task2TopGamer {
             final int gamerId = i % 5 + 1;
             gamerScoreEmitter.scheduleAtFixedRate(
                     () -> listenGamerScore(
-                            new GamerScore(gamerId, rnd.nextInt(1, 1000) / 10.0,
+                            new GamerScore(gamerId, 1 + rnd.nextInt(1000) / 10.0,
                                     LocalTime.now().plusSeconds(-3 + rnd.nextInt(4)))),
-                    rnd.nextInt(1, 10), rnd.nextInt(1, 10), TimeUnit.MILLISECONDS);
+                    1 + rnd.nextInt(10), 1 + rnd.nextInt(10), TimeUnit.MILLISECONDS);
         }
         topGamerPrinter.scheduleAtFixedRate(
                 () -> printTop3Gamers(), 5, 5, TimeUnit.SECONDS);

@@ -3,6 +3,7 @@ package ru.neoflex.task1;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
@@ -49,10 +50,10 @@ public class Task3NestedExceptionsSimple {
                 if (id == 0) {
                     int z = 1 / 0;
                 } else if (id == 1) {
-                    Files.readAllLines(Path.of("/a/b/c.txt"));
+                    Files.readAllLines(Paths.get("/a/b/c.txt"));
                 } else if (id == 2) {
                     try {
-                        Files.readAllLines(Path.of("/a/b/c.txt"));
+                        Files.readAllLines(Paths.get("/a/b/c.txt"));
                     } catch (IOException e) {
                         throw new RuntimeException("wrap IO exception", e);
                     }
