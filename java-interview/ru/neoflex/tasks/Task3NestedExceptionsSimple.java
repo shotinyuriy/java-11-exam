@@ -23,7 +23,6 @@ public class Task3NestedExceptionsSimple {
                 }
                 System.err.println();
             }
-            heavyResource.close();
         }
         TimeUnit.SECONDS.sleep(1);
         System.out.println("=== HAPPY END ===");
