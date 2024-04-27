@@ -5,33 +5,35 @@ import java.util.concurrent.*;
 
 public class Task4DistributedCalculator {
     public static void main(String[] args) throws InterruptedException {
-        CalculatorPublisher calculatorPublisher = new CalculatorPublisher();
-        final int stepsCount = calculatorPublisher.generateSteps();
-        final int publishedActionsCount = calculatorPublisher.publishActions();
-        CalculatorSubscriber calculatorSubscriber = new CalculatorSubscriber();
-        final CountDownLatch messagesToConsume = new CountDownLatch(publishedActionsCount);
-        calculatorSubscriber.start(messagesToConsume);
-        messagesToConsume.await();
-        calculatorSubscriber.printEveryStep(stepsCount);
+        try (CalcPub calcPub = new CalcPub(); CalcSub calcSub = new CalcSub();) {
+            final int stepsCount = calcPub.generateSteps();
+            final int pubMsgCount = calcPub.publishActions();
+            final CountDownLatch msgToConsumeCount = new CountDownLatch(pubMsgCount);
+            calcSub.start(msgToConsumeCount);
+            if (!msgToConsumeCount.await(5, TimeUnit.SECONDS)) {
+                System.err.println("Timeout Exceeded");
+            }
+            calcSub.printEveryStep(stepsCount);
+        }
     }
 
-    static class ActionOnValue {
+    static class CalcAction {
         final String valueId;
         final int step;
         final char operator;
         final double value;
 
-        public ActionOnValue(String valueId, int step, char operator, double value) {
+        public CalcAction(String valueId, int step, char operator, double value) {
             this.valueId = valueId;
             this.step = step;
             this.operator = operator;
             this.value = value;
         }
 
-        public double applyTo(Double current) {
+        public Double applyTo(Double current) {
+            if (operator == '=') return value;
+            if (current == null) return current;
             switch (operator) {
-                case '=':
-                    return value;
                 case '+':
                     return current + value;
                 case '-':
@@ -51,13 +53,14 @@ public class Task4DistributedCalculator {
         }
     }
 
-    static final BlockingQueue<ActionOnValue> MESSAGE_BROKER = new ArrayBlockingQueue<>(5);
+    static final BlockingQueue<CalcAction> MESSAGE_BROKER = new ArrayBlockingQueue<>(5);
 
-    static class CalculatorPublisher implements AutoCloseable {
+    static class CalcPub implements AutoCloseable { // Publisher is OK
         static final ExecutorService prdThreadPool = Executors.newFixedThreadPool(10);
-        final List<ActionOnValue> actions = new ArrayList<>();
+        final List<CalcAction> actions = new ArrayList<>();
 
         public int generateSteps() {
+            // ( ( ( ( =x +x ) *x) /x) -x) = x | if x = 2: 2 -> 4 -> 8 -> 4 -> 2
             final char[] operators = new char[]{'=', '+', '*', '/', '-'};
             final String[] valNames = {"A", "B", "C"};
             int step = 0;
@@ -65,57 +68,61 @@ public class Task4DistributedCalculator {
                 step++;
                 double value = 2.0;
                 for (String valName : valNames) {
-                    actions.add(new ActionOnValue(valName, step, operator, value++));
+                    actions.add(new CalcAction(valName, step, operator, value));
                 }
             }
             return step;
         }
 
         public int publishActions() {
-            actions.forEach(actionOnValue -> prdThreadPool.execute(() -> {
-                while (!MESSAGE_BROKER.offer(actionOnValue)) ;
+            actions.forEach(calcAction -> prdThreadPool.execute(() -> {
+                while (!MESSAGE_BROKER.offer(calcAction)) ;
             }));
             return actions.size();
         }
 
         @Override
-        public void close() throws Exception {
+        public void close() {
             prdThreadPool.shutdownNow();
         }
     }
 
-    static class CalculatorSubscriber implements AutoCloseable {  // TODO: fix Subscriber Logic
-        static final ScheduledExecutorService cnsThreadPool = Executors.newScheduledThreadPool(10);
+    static class CalcSub implements AutoCloseable {  // TODO: fix Subscriber Logic
+        static final ScheduledExecutorService cnsThreadPool = Executors.newScheduledThreadPool(5);
         static final Map<String, Double> subscriberVariables = new HashMap<>();
         private CountDownLatch messagesToConsume;
 
         void start(CountDownLatch messagesToConsume) {
             this.messagesToConsume = messagesToConsume;
-            cnsThreadPool.scheduleAtFixedRate(() -> consumeActionOnValue(MESSAGE_BROKER.poll()), 0, 5, TimeUnit.MILLISECONDS);
-            cnsThreadPool.scheduleAtFixedRate(() -> consumeActionOnValue(MESSAGE_BROKER.poll()), 1, 5, TimeUnit.MILLISECONDS);
-            cnsThreadPool.scheduleAtFixedRate(() -> consumeActionOnValue(MESSAGE_BROKER.poll()), 2, 5, TimeUnit.MILLISECONDS);
+            cnsThreadPool.scheduleAtFixedRate(() -> consumeActionOnValue(MESSAGE_BROKER.poll()), 0, 10, TimeUnit.MILLISECONDS);
+            cnsThreadPool.scheduleAtFixedRate(() -> consumeActionOnValue(MESSAGE_BROKER.poll()), 1, 10, TimeUnit.MILLISECONDS);
+            cnsThreadPool.scheduleAtFixedRate(() -> consumeActionOnValue(MESSAGE_BROKER.poll()), 2, 10, TimeUnit.MILLISECONDS);
         }
 
-        void consumeActionOnValue(ActionOnValue actionOnValue) {
-            if (actionOnValue == null) return;
-            messagesToConsume.countDown();
-            System.out.println("received: " + actionOnValue);
-            subscriberVariables.compute(actionOnValue.valueId, (valueId, current) -> actionOnValue.applyTo(current));
+        void consumeActionOnValue(CalcAction calcAction) {
+            try {
+                if (calcAction == null) return;
+                System.out.println("received: " + calcAction);
+                messagesToConsume.countDown();
+                subscriberVariables.compute(calcAction.valueId, (valueId, current) -> calcAction.applyTo(current));
+            } catch (RuntimeException e) {
+                e.printStackTrace();
+            }
         }
 
         void printEveryStep(int stepCount) {
             for (int step = 1; step <= stepCount; step++) {
-                printStateForStep(step);
+                printStateForStep(step, stepCount);
             }
         }
 
-        void printStateForStep(int step) {
-            System.out.printf("%n=== subscriberSnapShot. state for step=%d ===%n", step);
+        void printStateForStep(int step, int stepCount) {
+            System.out.printf("%n=== subscriberSnapShot. state for step=%d/%d ===%n", step, stepCount);
             subscriberVariables.forEach((valueId, value) -> System.out.printf("\t%s = %.3f%n", valueId, value));
         }
 
         @Override
-        public void close() throws Exception {
+        public void close() {
             cnsThreadPool.shutdownNow();
         }
     }
