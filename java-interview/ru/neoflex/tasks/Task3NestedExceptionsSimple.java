@@ -15,7 +15,7 @@ public class Task3NestedExceptionsSimple {
             try {
                 heavyResource.testCaseByIndex(testIdx);
             } catch (Exception e) {
-                Throwable rootCause = e; // TODO: fix this
+                Throwable rootCause = findRootCause(e); // TODO: fix this
                 System.err.println("=== testIdx:" + testIdx + " the root cause is [" + rootCause + "]");
                 if (DEBUG) {
                     System.err.println("DEBUG: full stack trace -> ");

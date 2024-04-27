@@ -117,7 +117,7 @@ public class Task4DistributedCalculator {
         }
 
         void printStateForStep(int step, int stepCount) {
-            System.out.printf("%n=== subscriberSnapShot. state for step=%d/%d ===%n", step, stepCount);
+            System.out.printf("%n=== subscriberVariables. state for step=%d/%d ===%n", step, stepCount);
             subscriberVariables.forEach((valueId, value) -> System.out.printf("\t%s = %.3f%n", valueId, value));
         }
 
