@@ -9,12 +9,12 @@ import java.util.concurrent.TimeUnit;
 public class Task3NestedExceptionsSimple {
     public static void main(String[] args) throws Exception {
         for (int testIdx = 0; testIdx < 4; testIdx++) {
-            HeavyResource heavyResource = new HeavyResource();
+            HeavyResource heavyResource = new HeavyResource(); // TODO: fix this ?
             try {
                 heavyResource.testCaseByIndex(testIdx);
             } catch (Exception e) {
                 Throwable rootCause = e; // TODO: fix this
-                System.err.println("=== testIdx:" + testIdx + " the root cause is " + rootCause);
+                System.err.println("=== testIdx:" + testIdx + " the root cause is [" + rootCause + "]");
                 System.err.println("full stack trace -> ");
                 e.printStackTrace();
                 System.err.println();
@@ -45,14 +45,14 @@ public class Task3NestedExceptionsSimple {
 
     static Throwable findRootCause(Throwable source) {
         return source;
-    } // TODO: may be helpful
+    } // TODO: may be helpful to implement
 
     static class HeavyResource implements AutoCloseable {
         static final Map<Long, List<byte[]>> GLOBAL_BIG_DATA = new HashMap<>();
         final long id = System.nanoTime();
 
         {
-            int size = (int) (Runtime.getRuntime().freeMemory() / 1024);
+            int size = (int) (Runtime.getRuntime().freeMemory() / 512);
             List<byte[]> localBigData = new ArrayList<>(size);
             for (int i = 0; i < size; i++) {
                 localBigData.add(new byte[1024]);
