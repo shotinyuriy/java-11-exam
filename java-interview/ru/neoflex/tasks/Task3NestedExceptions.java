@@ -1,4 +1,4 @@
-package ru.neoflex.task1;
+package ru.neoflex.tasks;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;

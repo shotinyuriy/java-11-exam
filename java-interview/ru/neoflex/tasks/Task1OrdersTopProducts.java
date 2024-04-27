@@ -1,4 +1,4 @@
-package ru.neoflex.task1;
+package ru.neoflex.tasks;
 
 import java.time.LocalDate;
 import java.time.Month;
@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
-import java.util.stream.Collectors;
 
 public class Task1OrdersTopProducts {
     static class CommerceItem {

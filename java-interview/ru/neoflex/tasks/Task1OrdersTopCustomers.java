@@ -1,4 +1,4 @@
-package ru.neoflex.task1;
+package ru.neoflex.tasks;
 
 import java.time.LocalDate;
 import java.time.Month;
