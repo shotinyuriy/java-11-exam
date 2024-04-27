@@ -2,16 +2,15 @@ package ru.neoflex.tasks;
 
 import java.time.LocalDate;
 import java.time.Month;
-import java.time.format.TextStyle;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Locale;
+import java.util.stream.Collectors;
 
 public class Task1OrdersTopProducts {
 
     public static void printTop2ProductsOfMonth(List<CommerceOrder> commerceOrders, Month month) {
-        System.out.println("=== Top 2 Product of " + month.getDisplayName(TextStyle.FULL, Locale.ENGLISH) + " ===");
+        System.out.println("=== Top 2 Product of " + month + " ===");
         // TODO: print ${productName}=${sum(count)}
         System.out.println(commerceOrders);
     }
@@ -36,17 +35,12 @@ public class Task1OrdersTopProducts {
         commerceOrders.add(new CommerceOrder(LocalDate.parse("2024-03-15"), Arrays.asList(
                 new CommerceItem("pears", 3), new CommerceItem("babanas", 7)))
         );
-//        commerceOrders.forEach(order -> {
-//            System.out.println("orderDate " + order.orderDate);
-//            order.commerceItems.forEach(item -> System.out.println("\t" + item));
-//            System.out.println();
-//        });
         printTop2ProductsOfMonth(commerceOrders, Month.MARCH);
     }
 
     static class CommerceItem {
-        public String productName;
-        public int count;
+        public final String productName;
+        public final int count;
 
         public CommerceItem(String productName, int count) {
             this.productName = productName;
@@ -60,8 +54,8 @@ public class Task1OrdersTopProducts {
     }
 
     static class CommerceOrder {
-        public LocalDate orderDate;
-        public List<CommerceItem> commerceItems;
+        public final LocalDate orderDate;
+        public final List<CommerceItem> commerceItems;
 
         public CommerceOrder(LocalDate orderDate, List<CommerceItem> commerceItems) {
             this.orderDate = orderDate;
@@ -70,7 +64,8 @@ public class Task1OrdersTopProducts {
 
         @Override
         public String toString() {
-            return "order{" + "orderDate=" + orderDate + ", commerceItems=" + commerceItems + '}';
+            return "order{" + "orderDate=" + orderDate + ", commerceItems=\n" + commerceItems.stream()
+                    .map(ci -> "\t" + ci.toString()).collect(Collectors.joining("\n")) + "}\n";
         }
     }
 }
