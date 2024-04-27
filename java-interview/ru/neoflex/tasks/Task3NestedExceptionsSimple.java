@@ -7,6 +7,8 @@ import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 public class Task3NestedExceptionsSimple {
+    static final boolean DEBUG = true; // TODO: disable when done
+
     public static void main(String[] args) throws Exception {
         for (int testIdx = 0; testIdx < 4; testIdx++) {
             HeavyResource heavyResource = new HeavyResource(); // TODO: fix this ?
@@ -15,8 +17,10 @@ public class Task3NestedExceptionsSimple {
             } catch (Exception e) {
                 Throwable rootCause = e; // TODO: fix this
                 System.err.println("=== testIdx:" + testIdx + " the root cause is [" + rootCause + "]");
-                System.err.println("full stack trace -> ");
-                e.printStackTrace();
+                if (DEBUG) {
+                    System.err.println("DEBUG: full stack trace -> ");
+                    e.printStackTrace();
+                }
                 System.err.println();
             }
         }
