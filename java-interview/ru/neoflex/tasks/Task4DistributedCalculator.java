@@ -62,12 +62,12 @@ public class Task4DistributedCalculator {
         public int generateSteps() {
             // ( ( ( ( =x +x ) *x) /x) -x) = x | if x = 2 then 2 -> 4 -> 8 -> 4 -> 2
             final char[] operators = new char[]{'=', '+', '*', '/', '-'};
-            final String[] valNames = {"A", "B", "C"};
+            final String[] varNames = {"A", "B", "C"};
             int step = 0;
             for (char operator : operators) {
                 step++;
                 double value = 2.0;
-                for (String valName : valNames) {
+                for (String valName : varNames) {
                     actions.add(new CalcAction(valName, step, operator, value));
                 }
             }
