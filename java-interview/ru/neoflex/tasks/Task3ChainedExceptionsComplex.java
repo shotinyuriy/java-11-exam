@@ -13,7 +13,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-public class Task3NestedExceptions {
+public class Task3ChainedExceptionsComplex {
     static List<Supplier<Exception>> rootCauseSuppliers = Arrays.asList(
             () -> new NullPointerException("root exception"),
             () -> new NumberFormatException("root exception"),

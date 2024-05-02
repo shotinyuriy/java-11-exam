@@ -2,21 +2,22 @@ package ru.neoflex.tasks;
 
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.NoSuchFileException;
 import java.nio.file.Paths;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
-public class Task3NestedExceptionsSimple {
-    static final boolean DEBUG = true; // TODO: disable when done
+public class Task3ChainedExceptions {
+    static final boolean DEBUG = false; // TODO: enable/disable if needed
 
     public static void main(String[] args) throws Exception {
         for (int testCase = 1; testCase <= 4; testCase++) {
-            HeavyResource heavyResource = new HeavyResource(); // TODO: fix this ?
             try {
-                heavyResource.testCaseForException(testCase);
+                HeavyResource heavyResource = new HeavyResource(); // TODO: fix this ?
+                heavyResource.importantTestCase(testCase);
             } catch (Exception e) {
-                Throwable rootCause = findRootCause(e); // TODO: fix this
-                System.err.println("=== testCase:" + testCase + " the root cause is [" + rootCause + "]");
+                Throwable rootCause = e; // TODO: fix this
+                System.err.println("=== testCase:" + testCase + " the root cause is [" + rootCause + "]; expected: " + expectExc[testCase - 1]);
                 if (DEBUG) {
                     System.err.println("DEBUG: full stack trace -> ");
                     e.printStackTrace();
@@ -31,6 +32,13 @@ public class Task3NestedExceptionsSimple {
     static Throwable findRootCause(Throwable source) {
         return source;
     } // TODO: may be helpful to implement
+
+    static final Class<?>[] expectExc = new Class[]{
+            ArithmeticException.class,
+            NoSuchFileException.class,
+            NoSuchFileException.class,
+            CustomException.class
+    };
 
     static class CustomRuntimeException extends RuntimeException {
         public CustomRuntimeException(String message, Throwable cause) {
@@ -56,6 +64,9 @@ public class Task3NestedExceptionsSimple {
         final long id = System.nanoTime();
 
         {
+            if (DEBUG) {
+                System.out.println(HeavyResource.class.getName() + " id=" + id + " is being opened");
+            }
             int size = (int) (Runtime.getRuntime().freeMemory() / 512);
             List<byte[]> localBigData = new ArrayList<>(size);
             for (int i = 0; i < size; i++) {
@@ -64,7 +75,7 @@ public class Task3NestedExceptionsSimple {
             GLOBAL_BIG_DATA.put(id, localBigData);
         }
 
-        void testCaseForException(int testCase) throws Exception {
+        void importantTestCase(int testCase) throws Exception {
             try {
                 if (testCase == 1) {
                     arithmetic();
@@ -111,6 +122,9 @@ public class Task3NestedExceptionsSimple {
         @Override
         public void close() throws Exception {
             GLOBAL_BIG_DATA.remove(id);
+            if (DEBUG) {
+                System.out.println(HeavyResource.class.getName() + " id=" + id + " closed");
+            }
         }
     }
 }
