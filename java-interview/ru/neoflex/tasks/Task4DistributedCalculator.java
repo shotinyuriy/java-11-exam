@@ -6,7 +6,8 @@ import java.util.concurrent.*;
 public class Task4DistributedCalculator {
     public static void main(String[] args) throws InterruptedException {
         try (CalcPub calcPub = new CalcPub(); CalcSub calcSub = new CalcSub()) {
-            final int stepsCount = calcPub.generateSteps();
+            // Example: ( ( ( ( =x +x ) *x) /x) -x) = x | if x = 2 then =2 +2 -> 4 *2 -> 8 /2 -> 4 -2 -> 2
+            final int stepsCount = calcPub.generateSteps(new String[]{"A", "B", "C"}, 2.0, new char[]{'=', '+', '*', '/', '-'});
             final int pubMsgCount = calcPub.publishActions();
             final CountDownLatch msgToConsumeCount = new CountDownLatch(pubMsgCount);
             calcSub.start(msgToConsumeCount);
@@ -19,7 +20,7 @@ public class Task4DistributedCalculator {
 
     static final BlockingQueue<CalcAction> MESSAGE_BROKER = new ArrayBlockingQueue<>(5);
 
-    static class CalcSub implements AutoCloseable {  // TODO: fix Subscriber Logic
+    static class CalcSub implements AutoCloseable {  // TODO: fix Calculator Subscriber Logic
         static final ScheduledExecutorService subThreadPool = Executors.newScheduledThreadPool(5);
         static final Map<String, Double> subscriberVariables = new HashMap<>();
         private CountDownLatch messagesToConsume;
@@ -49,7 +50,7 @@ public class Task4DistributedCalculator {
         }
 
         void printStateForStep(int step, int stepCount) { // TODO: fix if necessary
-            System.out.printf("%n=== subscriberVariables for step=%d/%d ===%n", step, stepCount);
+            System.out.printf("%n=== subscriber variables for step=%d/%d ===%n", step, stepCount);
             subscriberVariables.forEach((valueId, value) -> System.out.printf("\t%s = %.3f%n", valueId, value));
         }
 
@@ -59,6 +60,7 @@ public class Task4DistributedCalculator {
         }
     }
 
+    /** Read Only Class */
     static class CalcAction {
         final String varName;
         final int step;
@@ -94,19 +96,15 @@ public class Task4DistributedCalculator {
             return String.format("%s step %d: %s %.2f", varName, step, operator, value);
         }
     }
-
+    /** Read Only Class */
     static class CalcPub implements AutoCloseable { // Publisher is OK
         static final ExecutorService pubThreadPool = Executors.newFixedThreadPool(10);
         final List<CalcAction> actions = new ArrayList<>();
 
-        public int generateSteps() {
-            // ( ( ( ( =x +x ) *x) /x) -x) = x | if x = 2 then 2 -> 4 -> 8 -> 4 -> 2
-            final char[] operators = new char[]{'=', '+', '*', '/', '-'};
-            final String[] varNames = {"A", "B", "C"};
+        public int generateSteps(final String[] varNames, final double value, final char[] operators) {
             int step = 0;
             for (char operator : operators) {
                 step++;
-                double value = 2.0;
                 for (String valName : varNames) {
                     actions.add(new CalcAction(valName, step, operator, value));
                 }
