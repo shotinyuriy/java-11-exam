@@ -1,0 +1,8 @@
+.idea
+*.class
+out
+tmp
+classes
+**/*/out
+**/*/tmp
+**/*/classes
