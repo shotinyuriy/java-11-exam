@@ -61,8 +61,13 @@ public class Test extends AbstractTest {
         Solution solution = new Solution2();
         for (TestData testData : testDatas) {
             boolean result = solution.judgePoint24(testData.getCards());
-            System.out.printf("cards=%s expected=%s actual=%s\n",
-                    Arrays.toString(testData.getCards()), testData.isExpectedValue(), result);
+            if (testData.isExpectedValue() == result) {
+                System.out.printf("cards=%s expected=%s actual=%s\n",
+                        Arrays.toString(testData.getCards()), testData.isExpectedValue(), result);
+            } else {
+                System.err.printf("ERROR: cards=%s expected=%s actual=%s\n",
+                        Arrays.toString(testData.getCards()), testData.isExpectedValue(), result);
+            }
         }
     }
 }

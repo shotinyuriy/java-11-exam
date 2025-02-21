@@ -78,6 +78,8 @@ public class Solution2_clean implements Solution {
             if (action != '_') {
                 boolean lNeedP = left.priority() < right.priority() || left.priority() < this.priority();
                 boolean rNeedP = left.priority() > right.priority() || right.priority() < this.priority();
+//                boolean lNeedP = left.priority() < Math.max(right.priority(), this.priority()) || this.action == '-' && left.action == '-' || this.action == '/' && left.action == '/';
+//                boolean rNeedP = Math.max(left.priority(), this.priority()) > right.priority() || this.action == '-' && right.action == '-' || this.action == '/' && right.action == '/';
                 if (needP) {
                     return '(' + left.toString(lNeedP) + action + right.toString(rNeedP) + ')';
                 } else {
@@ -89,8 +91,8 @@ public class Solution2_clean implements Solution {
     }
 
     public boolean judgePoint24(int[] cards) {
+        logInfo("---\n");
         double x = 24.0;
-        // System.out.printf("x=%s\n", x.doubleValue());
         List<int[]> cardsPerm = new ArrayList<>();
         cardsPerm.add(cards); // 0123
         copySwapAndAdd(cardsPerm, cards, 0, 1); // 1023
@@ -108,11 +110,11 @@ public class Solution2_clean implements Solution {
         }
         for (BinOper oper : opers) {
             java.math.BigDecimal result = oper.result();
-//            if (Double.compare(result.doubleValue(), 23.0) > 0 && Double.compare(result.doubleValue(), 25.0) < 0) {
-//                System.out.printf("%s=%s\n", oper, result.doubleValue());
-//            }
+            if (Double.compare(result.doubleValue(), 23.0) > 0 && Double.compare(result.doubleValue(), 25.0) < 0) {
+                logDebug("%s=%s\n", oper, result.doubleValue());
+            }
             if (Double.compare(oper.result().doubleValue(), x) == 0) {
-//                System.out.printf("%s=%s\n", oper, result.doubleValue());
+                logInfo("%s=%s\n", oper, result.doubleValue());
                 return true;
             }
         }
@@ -178,5 +180,18 @@ public class Solution2_clean implements Solution {
             }
         }
         return opers;
+    }
+
+    protected boolean isDebugEnabled = false;
+    protected boolean isInfoEnabled = false;
+    private void logDebug(String pattern, Object... args) {
+        if (isDebugEnabled) {
+            System.out.printf(pattern, args);
+        }
+    }
+    private void logInfo(String pattern, Object... args) {
+        if (isInfoEnabled) {
+            System.out.printf(pattern, args);
+        }
     }
 }
